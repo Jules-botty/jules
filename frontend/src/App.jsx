@@ -25,6 +25,7 @@ import Exo from "./pages/Exo";
 import Declaration from "./pages/Declaration";
 import Regularisation from "./pages/Regularisation";
 import Bae from "./pages/Bae";
+import Onely from "./pages/OneLeave copy";
 
 
 
@@ -68,6 +69,15 @@ const App = () => (
         </ProtectedRoute>
       }
     />
+   <Route
+      path="/history"
+      element={
+        <ProtectedRoute>
+          <LeaveHistoryPage />
+        </ProtectedRoute>
+      }
+    />
+
     <Route
       path="/employee/analytics"
       element={
@@ -130,6 +140,15 @@ const App = () => (
       element={
         <ProtectedRoute roles={["employee"]}>
           <Oneleave />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/only/:id"
+      element={
+        <ProtectedRoute roles={["employee"]}>
+          <Onely />
         </ProtectedRoute>
       }
     />

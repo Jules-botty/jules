@@ -44,6 +44,22 @@ const Factures = () => {
     { to: "/employee/tickets", label: "Message" }
   ];
 
+   const navItemsa = [
+    { to: "/admin/analytics", label: "Suivi des Dossiers" },
+    { to: "/history", label: "Liste de Dossiers" },
+    { to: "/admin/user", label: "Gestion Utilisateurs" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/assurance", label: "Assurances" },
+    { to: "/exo", label: "Exo" },
+    { to: "/declaration", label: "Declaration" },
+    { to: "/regul", label: "Regularisation" },
+    { to: "/bae", label: "BAE" },
+    { to: "/admin/tickets", label: "Messages" }
+  ];
+
   const navItemsd = [
     { to: "/employee/history", label: "Liste de Dossiers" },
     { to: "/employee/tickets", label: "Message" }
@@ -505,25 +521,106 @@ const Factures = () => {
     </SidebarLayout> 
 
     
-    :
+    : user.role === "admin" ?
 
 
+    <SidebarLayout title="Dossiers Facturés" items={navItemsa}>
 
 
+      <section className="glass-card p-6 sm:p-2">
+
+         <div className="grid gap-4 mb-3 md:grid-cols-2">
+
+        <div>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Rechercher</label>
+        <select
+          className="field"
+          value={rechercher}
+          onChange={(e) => setRechercher(e.target.value)}
+          required
+        >
+          <option value=""> </option>
+          <option value="dossier">Par dossier</option>
+          <option value="numerofac">Par N° facture</option>
+          <option value="clients">Par Client</option>
+          <option value="datefac">Par Date</option>
+        </select>
+        </div>
+      { rechercher === "dossier" ?
+
+      <div>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par n° Dossier</label>
+      <input 
+        className="field"
+        type="text" 
+        placeholder="Rech. par n° Dossier" 
+        value={recherche}
+        onChange={(e) => setRecherche(e.target.value)}
+      />
+      </div> 
+      
+      :  rechercher === "numerofac" ?
+       
+       <div>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par N° Facture</label>
+      <input 
+        className="field"
+        type="text" 
+        placeholder="Rech. par N° Facture" 
+        value={rechnbfc}
+        onChange={(e) => setRechnbfc(e.target.value)}
+      />
+
+      </div>
+ 
+      
+      : rechercher === "clients" ?
+       
+
+       <div>
+      <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par Client</label>
+      
+       <select
+          className="field"
+          value={rechclient}
+          onChange={(e) => setRechclient(e.target.value)}
+          
+        >
+          <option value="" ></option>
+          { dossierfiltred.map((leave)=> (
+          <option value={leave.client} key={leave._id}> 
+          {leave.client}
+          </option>
+          ))
+          }
+        </select>
+
+      </div> 
+
+       : rechercher === "datefac" ?
+       
+
+       <div>
+      <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par Date</label>
+      <input 
+        className="field"
+        type="date" 
+        placeholder="Rech. par n° Client" 
+        value={rechdate}
+        onChange={(e) => setRechdate(e.target.value)}
+      />
+
+      </div> 
+      :
+
+      null
+  
+
+      }
+      
 
 
-    //Autre
-
-     <SidebarLayout title="Liste de Dossiers" items={navItemsd}>
-
-
-      <section className="glass-card p-4 sm:p-5">
-
-
-
-
-        
-
+      </div>
 
 
 
@@ -539,31 +636,163 @@ const Factures = () => {
               <thead>
                 <tr>
                   <th>N° Dossier</th>
-                  <th>Types</th>
-                  <th>Cient</th>
-                  <th>N° OT</th>
-                  <th>N° LTA / BL</th>
-                  <th>Description</th>
-                  <th> </th>
+                  <th>N° de Facture</th>
+                  <th>Date de Facturation</th>
+                  <th>Montant Facture</th>
+                  <th>Deboours Douanes</th>
+                  <th>Deboours Divers</th>
+                  <th>Prestations</th>
+                  
+                   
+                  
                 </tr>
               </thead>
               <tbody>
+
                 
-                {leavess.map((leave) => (
+
+               {  recherche ?
+               
+
+               
+                filtredoc.map((leave)=> (
                   <tr key={leave._id}>
                     <td className="capitalize">{leave.nbDossier}</td>
-                    <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
-                    <td className="capitalize">{leave.client}</td>
-                    <td className="capitalize">{leave.nbOt}</td>
-                    <td className="capitalize">{leave.nbltabl}</td>
-                    <td className="capitalize">{leave.nbColis} colis de {leave.poids} Kg</td>
-                    <td>
-                      <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold capitalize">
-                        {leave.status}
-                      </span>
+                    <td className="capitalize">{leave.nbfact}</td>
+                    <td className="capitalize">{leave.datefacture} </td>
+                   <td className="capitalize ">
+                      {leave.montantfac ?
+                      <>
+                      {leave.montantfac} FCFA
+
+                      </> : null
+
+                      }
+                      
                     </td>
+                    <td className="capitalize">{leave.deb_douanes} FCFA</td>
+                    <td className="capitalize">{leave.deb_divers} FCFA</td>
+                    <td className="capitalize">{leave.montantprest} FCFA</td>
+                   
+                    
                   </tr>
-                ))}
+                ))
+
+
+
+                : rechnbfc?
+
+                 filtrenbfac.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.nbfact}</td>
+                    <td className="capitalize">{leave.datefacture} </td>
+                   <td className="capitalize ">
+                      {leave.montantfac ?
+                      <>
+                      {leave.montantfac} FCFA
+
+                      </> : null
+
+                      }
+                      
+                    </td>
+                    <td className="capitalize">{leave.deb_douanes} FCFA</td>
+                    <td className="capitalize">{leave.deb_divers} FCFA</td>
+                    <td className="capitalize">{leave.montantprest} FCFA</td>
+                   
+                    
+                  </tr>
+                ))
+
+
+                : rechclient?
+
+                  filtreclient.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.nbfact}</td>
+                    <td className="capitalize">{leave.datefacture} </td>
+                   <td className="capitalize ">
+                      {leave.montantfac ?
+                      <>
+                      {leave.montantfac} FCFA
+
+                      </> : null
+
+                      }
+                      
+                    </td>
+                    <td className="capitalize">{leave.deb_douanes} FCFA</td>
+                    <td className="capitalize">{leave.deb_divers} FCFA</td>
+                    <td className="capitalize">{leave.montantprest} FCFA</td>
+                   
+                    
+                  </tr>
+                ))
+
+
+
+                : rechdate?
+
+
+                  filtredate.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.nbfact}</td>
+                    <td className="capitalize">{leave.datefacture} </td>
+                   <td className="capitalize ">
+                      {leave.montantfac ?
+                      <>
+                      {leave.montantfac} FCFA
+
+                      </> : null
+
+                      }
+                      
+                    </td>
+                    <td className="capitalize">{leave.deb_douanes} FCFA</td>
+                    <td className="capitalize">{leave.deb_divers} FCFA</td>
+                    <td className="capitalize">{leave.montantprest} FCFA</td>
+                   
+                    
+                  </tr>
+                ))
+
+
+
+                :
+
+
+                dossierfiltred.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.nbfact}</td>
+                    <td className="capitalize">{leave.datefacture} </td>
+                   <td className="capitalize ">
+                      {leave.montantfac ?
+                      <>
+                      {leave.montantfac} FCFA
+
+                      </> : null
+
+                      }
+                      
+                    </td>
+                    <td className="capitalize">{leave.deb_douanes} FCFA</td>
+                    <td className="capitalize">{leave.deb_divers} FCFA</td>
+                    <td className="capitalize">{leave.montantprest} FCFA</td>
+                   
+                    
+                  </tr>
+                ))
+
+            
+
+                }
+
+
+
               </tbody>
             </table>
           </div>
@@ -573,6 +802,10 @@ const Factures = () => {
 
 
     </SidebarLayout> 
+
+
+
+: null
 
       }
       

@@ -32,6 +32,30 @@ const LeaveHistoryPage = () => {
     { to: "/employee/tickets", label: "Message" }
   ];
 
+  const navItemst = [
+    { to: "/employee", label: "Dashboard" },
+    { to: "/employee/history", label: "Liste Dossiers" },
+    { to: "/employee/analytics", label: "Rapport" },
+    { to: "/employee/tickets", label: "Message" }
+  ];
+
+
+  const navItemsa = [
+    { to: "/admin/analytics", label: "Suivi des Dossiers" },
+    { to: "/history", label: "Liste Dossiers" },
+    { to: "/admin/user", label: "Gestion Utilisateurs" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/assurance", label: "Assurances" },
+    { to: "/exo", label: "Exo" },
+    { to: "/declaration", label: "Declaration" },
+    { to: "/regul", label: "Regularisation" },
+    { to: "/bae", label: "BAE" },
+    { to: "/admin/tickets", label: "Messages" }
+  ];
+
 
   const navItemsfac = [
     { to: "/employee/history", label: "Liste de Dossiers" },
@@ -90,22 +114,22 @@ const LeaveHistoryPage = () => {
 
 
   //Ouverture
-  const dossierfiltre = leaves.filter(leaves =>
+  const dossierfiltre = leavess.filter(leaves =>
         leaves.nbDossier.toLowerCase().includes(recherche.toLowerCase())
        );
 
 
 
-   const filtreltabl = leaves.filter(leaves =>
+   const filtreltabl = leavess.filter(leaves =>
         leaves.nbltabl.toLowerCase().includes(rechltabl.toLowerCase())
        );
 
     
-    const filtreot = leaves.filter(leaves =>
+    const filtreot = leavess.filter(leaves =>
       leaves.nbOt.toLowerCase().includes(rechot.toLowerCase())
       );
 
-    const filtreclient = leaves.filter(leaves =>
+    const filtreclient = leavess.filter(leaves =>
       leaves.client.toLowerCase().includes(rechclient.toLowerCase())
       );
 
@@ -135,7 +159,7 @@ const LeaveHistoryPage = () => {
 
     <>
     
-    {user.poste === "Secretaire" ? 
+    {user.poste === "Secretaire" || user.poste === "Logisticien"? 
     <SidebarLayout title="Liste de Dossiers" items={navItems}> 
 
     <section className="glass-card p-4 sm:p-5">
@@ -230,7 +254,7 @@ const LeaveHistoryPage = () => {
         {error && <p className="rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
         {loading ? (
           <p className="text-slate-500">Chargement...</p>
-        ) : leaves.length === 0 ? (
+        ) : leavess.length === 0 ? (
           <p className="text-slate-500">Pas de dossiers ouverts.</p>
         ) : (
           <div className="table-wrap">
@@ -243,7 +267,13 @@ const LeaveHistoryPage = () => {
                   <th>N° OT</th>
                   <th>N° LTA / BL</th>
                   <th>Description</th>
+                 
+                   
+                   <th> Status </th> 
+
+                 
                   
+                  <th> </th>
                   <th> </th>
                 </tr>
               </thead>
@@ -254,13 +284,14 @@ const LeaveHistoryPage = () => {
 
                 
 
-                  dossierfiltre.map((leave)=> (
-                  <tr key={leave._id}>
+                  dossierfiltred.map((leave)=> (
+                   <tr key={leave._id}>
                     <td className="capitalize">{leave.nbDossier}</td>
                     <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
                     <td className="capitalize">{leave.client}</td>
                     <td className="capitalize">{leave.nbOt}</td>
                     <td className="capitalize">{leave.nbltabl}</td>
+
                     <td className="capitalize">
                       { leave.poids ?
                         <> 
@@ -275,10 +306,33 @@ const LeaveHistoryPage = () => {
                     </td>
                     
                     <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
 
                       <span className=" px-2 py-1 text-xs font-semibold capitalize">
                         <Link
-                        className="rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
                          to={"/onleave/"+leave._id}
                         
                         type="button"
@@ -297,13 +351,14 @@ const LeaveHistoryPage = () => {
 
                 : rechltabl ?
 
-                filtreltabl.map((leave)=> (
+                filtreltabld.map((leave)=> (
                   <tr key={leave._id}>
                     <td className="capitalize">{leave.nbDossier}</td>
                     <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
                     <td className="capitalize">{leave.client}</td>
                     <td className="capitalize">{leave.nbOt}</td>
                     <td className="capitalize">{leave.nbltabl}</td>
+
                     <td className="capitalize">
                       { leave.poids ?
                         <> 
@@ -316,12 +371,35 @@ const LeaveHistoryPage = () => {
                       }
                       
                     </td>
+                    
+                    <td>
                    
+                        {leave.status}
+                    
+
+                    </td>
+
                     <td>
 
                       <span className=" px-2 py-1 text-xs font-semibold capitalize">
                         <Link
-                        className="rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
                          to={"/onleave/"+leave._id}
                         
                         type="button"
@@ -337,13 +415,14 @@ const LeaveHistoryPage = () => {
 
                 : rechot?
 
-                filtreot.map((leave)=> (
+                filtreotd.map((leave)=> (
                   <tr key={leave._id}>
                     <td className="capitalize">{leave.nbDossier}</td>
                     <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
                     <td className="capitalize">{leave.client}</td>
                     <td className="capitalize">{leave.nbOt}</td>
                     <td className="capitalize">{leave.nbltabl}</td>
+
                     <td className="capitalize">
                       { leave.poids ?
                         <> 
@@ -358,10 +437,33 @@ const LeaveHistoryPage = () => {
                     </td>
                     
                     <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
 
                       <span className=" px-2 py-1 text-xs font-semibold capitalize">
                         <Link
-                        className="rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
                          to={"/onleave/"+leave._id}
                         
                         type="button"
@@ -377,20 +479,55 @@ const LeaveHistoryPage = () => {
 
                 : rechclient ?
 
-                filtreclient.map((leave)=> (
+                filtreclientd.map((leave)=> (
                   <tr key={leave._id}>
                     <td className="capitalize">{leave.nbDossier}</td>
                     <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
                     <td className="capitalize">{leave.client}</td>
                     <td className="capitalize">{leave.nbOt}</td>
                     <td className="capitalize">{leave.nbltabl}</td>
-                    <td className="capitalize">{leave.nbColis} colis de {leave.poids} Kg</td>
+
+                    <td className="capitalize">
+                      { leave.poids ?
+                        <> 
+                         {leave.nbColis} colis de {leave.poids} Kg
+                        </>
+                         :
+
+                         null
+
+                      }
+                      
+                    </td>
+                    
+                    <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
                     
                     <td>
 
                       <span className=" px-2 py-1 text-xs font-semibold capitalize">
                         <Link
-                        className="rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
                          to={"/onleave/"+leave._id}
                         
                         type="button"
@@ -406,13 +543,14 @@ const LeaveHistoryPage = () => {
 
                 :
 
-                leaves.map((leave)=> (
+                leavess.map((leave)=> (
                   <tr key={leave._id}>
                     <td className="capitalize">{leave.nbDossier}</td>
                     <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
                     <td className="capitalize">{leave.client}</td>
                     <td className="capitalize">{leave.nbOt}</td>
                     <td className="capitalize">{leave.nbltabl}</td>
+
                     <td className="capitalize">
                       { leave.poids ?
                         <> 
@@ -427,10 +565,33 @@ const LeaveHistoryPage = () => {
                     </td>
                     
                     <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
 
                       <span className=" px-2 py-1 text-xs font-semibold capitalize">
                         <Link
-                        className="rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
                          to={"/onleave/"+leave._id}
                         
                         type="button"
@@ -458,13 +619,468 @@ const LeaveHistoryPage = () => {
     
     </SidebarLayout>
 
+    
+
+   :user.role === "admin" ? 
+    <SidebarLayout title="Liste de Dossiers" items={navItemsa}> 
+
+    <section className="glass-card p-4 sm:p-5">
+
+       
+
+
+      <div className="grid gap-4 mb-3 md:grid-cols-2">
+
+        <div>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Rechercher</label>
+        <select
+          className="field"
+          value={rechercher}
+          onChange={(e) => setRechercher(e.target.value)}
+          required
+        >
+          <option value=""> </option>
+          <option value="dossier">Par dossier</option>
+          <option value="ltabl">Par LTA, BL </option>
+          <option value="ot">Par OT</option>
+          <option value="clients">Par Client</option>
+        </select>
+        </div>
+      { rechercher === "dossier" ?
+
+      <div>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par n° Dossier</label>
+      <input 
+        className="field"
+        type="text" 
+        placeholder="Rech. par n° Dossier" 
+        value={recherche}
+        onChange={(e) => setRecherche(e.target.value)}
+      />
+      </div> 
+      
+      :  rechercher === "ltabl" ?
+       
+       <div>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par LTA, BL</label>
+      <input 
+        className="field"
+        type="text" 
+        placeholder="Rech. par LTA, BL" 
+        value={rechltabl}
+        onChange={(e) => setRechltabl(e.target.value)}
+      />
+
+      </div>
+
+      : rechercher === "ot" ?
+
+      <div>
+      <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par OT</label>
+      <input 
+        className="field"
+        type="text" 
+        placeholder="Rech. par n° OT" 
+        value={rechot}
+        onChange={(e) => setRechot(e.target.value)}
+      />
+
+      </div>  
+      
+      : rechercher === "clients" ?
+       
+
+       <div>
+      <label className="mb-1 block text-sm font-semibold text-slate-700">Rech. par Client</label>
+      <input 
+        className="field"
+        type="text" 
+        placeholder="Rech. par n° Client" 
+        value={rechclient}
+        onChange={(e) => setRechclient(e.target.value)}
+      />
+
+      </div> 
+      :
+
+      null
+  
+
+      }
+      
+
+
+      </div>
+
+
+        {error && <p className="rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
+        {loading ? (
+          <p className="text-slate-500">Chargement...</p>
+        ) : leavess.length === 0 ? (
+          <p className="text-slate-500">Pas de dossiers ouverts.</p>
+        ) : (
+          <div className="table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>N° Dossier</th>
+                  <th>Types</th>
+                  <th>Cient</th>
+                  <th>N° OT</th>
+                  <th>N° LTA / BL</th>
+                  <th>Description</th>
+                 
+                   
+                   <th> Status </th> 
+
+                 
+                  
+                  <th> </th>
+                  <th> </th>
+                </tr>
+              </thead>
+              <tbody>
+
+
+                {recherche  ?
+
+                
+
+                  dossierfiltred.map((leave)=> (
+                   <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
+                    <td className="capitalize">{leave.client}</td>
+                    <td className="capitalize">{leave.nbOt}</td>
+                    <td className="capitalize">{leave.nbltabl}</td>
+
+                    <td className="capitalize">
+                      { leave.poids ?
+                        <> 
+                         {leave.nbColis} colis de {leave.poids} Kg
+                        </>
+                         :
+
+                         null
+
+                      }
+                      
+                    </td>
+                    
+                    <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/onleave/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Actualiser 
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                  </tr>
+                ))
+
+
+               
+
+                : rechltabl ?
+
+                filtreltabld.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
+                    <td className="capitalize">{leave.client}</td>
+                    <td className="capitalize">{leave.nbOt}</td>
+                    <td className="capitalize">{leave.nbltabl}</td>
+
+                    <td className="capitalize">
+                      { leave.poids ?
+                        <> 
+                         {leave.nbColis} colis de {leave.poids} Kg
+                        </>
+                         :
+
+                         null
+
+                      }
+                      
+                    </td>
+                    
+                    <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/onleave/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Actualiser 
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                  </tr>
+                ))
+
+                : rechot?
+
+                filtreotd.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
+                    <td className="capitalize">{leave.client}</td>
+                    <td className="capitalize">{leave.nbOt}</td>
+                    <td className="capitalize">{leave.nbltabl}</td>
+
+                    <td className="capitalize">
+                      { leave.poids ?
+                        <> 
+                         {leave.nbColis} colis de {leave.poids} Kg
+                        </>
+                         :
+
+                         null
+
+                      }
+                      
+                    </td>
+                    
+                    <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/onleave/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Actualiser 
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                  </tr>
+                ))
+
+                : rechclient ?
+
+                filtreclientd.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
+                    <td className="capitalize">{leave.client}</td>
+                    <td className="capitalize">{leave.nbOt}</td>
+                    <td className="capitalize">{leave.nbltabl}</td>
+
+                    <td className="capitalize">
+                      { leave.poids ?
+                        <> 
+                         {leave.nbColis} colis de {leave.poids} Kg
+                        </>
+                         :
+
+                         null
+
+                      }
+                      
+                    </td>
+                    
+                    <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/onleave/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Actualiser 
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                  </tr>
+                )) 
+
+                :
+
+                leavess.map((leave)=> (
+                  <tr key={leave._id}>
+                    <td className="capitalize">{leave.nbDossier}</td>
+                    <td className="capitalize">{leave.cetegorie} {leave.leaveType}</td>
+                    <td className="capitalize">{leave.client}</td>
+                    <td className="capitalize">{leave.nbOt}</td>
+                    <td className="capitalize">{leave.nbltabl}</td>
+
+                    <td className="capitalize">
+                      { leave.poids ?
+                        <> 
+                         {leave.nbColis} colis de {leave.poids} Kg
+                        </>
+                         :
+
+                         null
+
+                      }
+                      
+                    </td>
+                    
+                    <td>
+                   
+                        {leave.status}
+                    
+
+                    </td>
+
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-b from-emerald-600 to-blue-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/only/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Voir
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                    
+                    <td>
+
+                      <span className=" px-2 py-1 text-xs font-semibold capitalize">
+                        <Link
+                        className="rounded-lg btn-primary bg-gradient-to-primary from-emerald-600 to-teal-500 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+                         to={"/onleave/"+leave._id}
+                        
+                        type="button"
+                        >
+                           Actualiser 
+                           
+                        </Link>
+                      </span>
+
+                    </td>
+                  </tr>
+                )) 
 
 
 
+                }
 
+            
 
-
-
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    
+    </SidebarLayout>
+   
 
 
 

@@ -47,6 +47,22 @@ const AdminAnalyticsPage = () => {
     { to: "/admin/tickets", label: "Messages" }
   ];
 
+  const navItemsa = [
+    { to: "/admin/analytics", label: "Suivi des Dossiers" },
+    { to: "/history", label: "Liste de Dossiers" },
+    { to: "/admin/user", label: "Gestion Utilisateurs" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/assurance", label: "Assurances" },
+    { to: "/exo", label: "Exo" },
+    { to: "/declaration", label: "Declaration" },
+    { to: "/regul", label: "Regularisation" },
+    { to: "/bae", label: "BAE" },
+    { to: "/admin/tickets", label: "Messages" }
+  ];
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -190,7 +206,7 @@ const AdminAnalyticsPage = () => {
   };
 
   return (
-    <SidebarLayout title="Suivi des Dossiers" items={navItems}>
+    <SidebarLayout title="Suivi des Dossiers" items={navItemsa}>
       {error && <p className="glass-card rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
       <div>
 

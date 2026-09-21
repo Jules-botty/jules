@@ -45,6 +45,9 @@ const createLeave = async (req, res) => {
     bondesortie,
     exportinvoice,
 
+    eta,
+    status,
+
 
     statutfac,
     montantfac,
@@ -133,6 +136,9 @@ const createLeave = async (req, res) => {
     factcom,
     bondesortie,
     exportinvoice,
+
+    eta,
+    status,
 
     statutfac,
     montantfac,
@@ -283,6 +289,9 @@ const updateLeaves = async (req, res) => {
     bondesortie,
     exportinvoice,
 
+    eta,
+    status,
+
     statutfac,
     montantfac,
     deb_douanes,
@@ -328,6 +337,9 @@ leave.desigation = desigation;
 leave.factcom = factcom;
 leave.bondesortie = bondesortie;
 leave.exportinvoice = exportinvoice;
+
+leave.eta = eta;
+leave.status = status;
 
 leave.statutfac = statutfac;
 leave.montantfac = montantfac;

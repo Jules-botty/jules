@@ -21,6 +21,24 @@ const AdminTicketsPage = () => {
     { to: "/admin/tickets", label: "Messages" }
   ];
 
+
+  const navItemsa = [
+    { to: "/admin/analytics", label: "Suivi des Dossiers" },
+    { to: "/history", label: "Liste de Dossiers" },
+    { to: "/admin/user", label: "Gestion Utilisateurs" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/assurance", label: "Assurances" },
+    { to: "/exo", label: "Exo" },
+    { to: "/declaration", label: "Declaration" },
+    { to: "/regul", label: "Regularisation" },
+    { to: "/bae", label: "BAE" },
+    { to: "/admin/tickets", label: "Messages" }
+  ];
+
+
   const loadTickets = async () => {
     setLoading(true);
     setError("");
@@ -69,11 +87,11 @@ const AdminTicketsPage = () => {
   };
 
   return (
-    <SidebarLayout title="Admin Support Tickets" items={navItems}>
+    <SidebarLayout title="Demandes" items={navItemsa}>
       <section className="glass-card p-4 sm:p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-xl font-bold">Employee Tickets</h2>
-          <select
+          <h2 className="text-xl font-bold">Messages</h2>
+         {/** <select
             className="field w-full max-w-[240px]"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -83,14 +101,14 @@ const AdminTicketsPage = () => {
             <option value="in_progress">In Progress</option>
             <option value="resolved">Resolved</option>
             <option value="closed">Closed</option>
-          </select>
+          </select> */}
         </div>
 
         {error && <p className="mb-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
         {loading ? (
-          <p className="text-slate-500">Loading tickets...</p>
+          <p className="text-slate-500">chargement des Messages...</p>
         ) : tickets.length === 0 ? (
-          <p className="text-slate-500">No tickets found.</p>
+          <p className="text-slate-500">Pas de Messages disponibles.</p>
         ) : (
           <div className="space-y-3">
             {tickets.map((ticket) => (

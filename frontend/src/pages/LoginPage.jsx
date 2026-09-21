@@ -53,7 +53,7 @@ const LoginPage = () => {
           <div className="mt-8 grid grid-cols-2 gap-3">
             <div className="rounded-xl border border-white/20 bg-white/10 p-4">
               
-              <p className="text-xl font-bold">Suivie des Dossiers</p>
+              <p className="text-xl font-bold">Suivi des Dossiers</p>
             </div>
             <div className="rounded-xl border border-white/20 bg-white/10 p-4">
              

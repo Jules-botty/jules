@@ -22,16 +22,19 @@ const router = express.Router();
 router.post(
   "/",
   protect,
-  authorizeRoles("employee"),
+ // authorizeRoles("employee"),
   createLeaveValidator,
   validateRequest,
   asyncHandler(createLeave)
 );
 
-router.get("/my", protect, authorizeRoles("employee"), asyncHandler(getMyLeaves));
+router.get("/my", protect, 
+ // authorizeRoles("employee"),
+   asyncHandler(getMyLeaves));
 //router.get("/myas", protect, authorizeRoles("employee"), asyncHandler(getMyLeavesa));
 
-router.get("/mya", protect, asyncHandler(getMyLeavesa));
+router.get("/mya", protect,
+ asyncHandler(getMyLeavesa));
 
 router.get("/onleave/:id",
    protect, 
@@ -41,9 +44,11 @@ router.get("/onleave/:id",
 router.get("/analytics", protect, asyncHandler(getAnalytics));
 
 router.put("/updateleave/:id", protect, asyncHandler(updateLeaves));
-router.get("/summary/my", protect, authorizeRoles("employee"), asyncHandler(getMyLeaveSummary));
+router.get("/summary/my", protect,
+  // authorizeRoles("employee"), 
+   asyncHandler(getMyLeaveSummary));
 router.get("/review-queue", protect, authorizeRoles("manager"), asyncHandler(getReviewQueue));
-router.get("/analytics/manager", protect, authorizeRoles("manager"), asyncHandler(getManagerAnalytics));
+router.get("/analytics/manager", protect, asyncHandler(getManagerAnalytics));
 
 router.patch(
   "/:id/status",

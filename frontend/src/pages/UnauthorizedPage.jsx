@@ -5,7 +5,7 @@ const UnauthorizedPage = () => (
     <div className="glass-card w-full max-w-lg p-8 text-center">
       <h1 className="mb-2 text-4xl font-extrabold text-slate-900">403</h1>
       <p className="mb-1 text-xl font-semibold text-slate-800">Autaurisation</p>
-      <p className="mb-6 text-slate-600">Vous avez pas access à cette page.</p>
+      <p className="mb-6 text-slate-600">Vous n'avez pas access à cette page.</p>
       <Link to="/" className="btn-primary inline-flex">
         Aller à la page d'Accueille
       </Link>

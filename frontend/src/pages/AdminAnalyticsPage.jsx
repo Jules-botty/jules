@@ -17,9 +17,19 @@ const AdminDashboard = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const navItems = [
+ const navItemsa = [
     { to: "/admin/analytics", label: "Suivi des Dossiers" },
+    { to: "/history", label: "Liste de Dossiers" },
     { to: "/admin/user", label: "Gestion Utilisateurs" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/assurance", label: "Assurances" },
+    { to: "/exo", label: "Exo" },
+    { to: "/declaration", label: "Declaration" },
+    { to: "/regul", label: "Regularisation" },
+    { to: "/bae", label: "BAE" },
     { to: "/admin/tickets", label: "Messages" }
   ];
 
@@ -71,7 +81,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <SidebarLayout title="Admin Panel" items={navItems}>
+    <SidebarLayout title="Admin Panel" items={navItemsa}>
       <section className="glass-card p-4 sm:p-5">
         <h2 className="mb-3 text-xl font-bold">Créer un Utilisateur</h2>
         {error && <p className="mb-2 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
@@ -107,12 +117,15 @@ const AdminDashboard = () => {
           <div className="flex gap-2">
             <select
               className="field"
+              required
               value={form.role}
               onChange={(e) => setForm((p) => ({ ...p, role: e.target.value }))}
             >
+              <option value=""></option>
               <option value="employee">Employé</option>
-              <option value="manager">Manager</option>
               <option value="admin">Administrateur</option>
+              <option value="manager">Manager</option>
+              
             </select>
 
             </div>
@@ -120,9 +133,11 @@ const AdminDashboard = () => {
            <div className="flex gap-2">
             <select
               className="field"
+              required
               value={form.poste}
               onChange={(e) => setForm((p) => ({ ...p, poste: e.target.value }))}
             >
+              <option value=""></option>
               <option value="PDG">PDG</option>
               <option value="DG">DG</option>
               <option value="RH">RH</option>

@@ -30,12 +30,44 @@ const EmployeeTicketsPage = () => {
 
    const { user } = useAuth();
 
-  const navItems = [
+   const navItems = [
     { to: "/employee", label: "Dashboard" },
-    { to: "/employee/apply", label: "Ouverture de Dossiers" },
-    { to: "/employee/history", label: "Liste des Dossiers" },
+    { to: "/employee/apply", label: "Ouverture Dossiers" },
+    { to: "/employee/history", label: "Liste de Dossiers" },
     { to: "/employee/analytics", label: "Rapport" },
     { to: "/employee/tickets", label: "Message" }
+  ];
+
+   const navItemst = [
+    { to: "/employee", label: "Dashboard" },
+    { to: "/employee/history", label: "Liste Dossiers" },
+    { to: "/employee/analytics", label: "Rapport" },
+    { to: "/employee/tickets", label: "Message" }
+  ];
+
+
+  const navItemsfac = [
+    { to: "/employee/history", label: "Liste de Dossiers" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/employee/tickets", label: "Message" }
+  ];
+
+  const navItemsa = [
+    { to: "/admin/analytics", label: "Suivi des Dossiers" },
+    { to: "/admin/user", label: "Gestion Utilisateurs" },
+    { to: "/bpafac", label: "En attente de BPA" },
+    { to: "/bcfac", label: "En attente de BC" },
+    { to: "/factures", label: "Factures" },
+    { to: "/releves", label: "Relevés" },
+    { to: "/assurance", label: "Assurances" },
+    { to: "/exo", label: "Exo" },
+    { to: "/declaration", label: "Declaration" },
+    { to: "/regul", label: "Regularisation" },
+    { to: "/bae", label: "BAE" },
+    { to: "/admin/tickets", label: "Messages" }
   ];
 
   const navItemsd = [
@@ -186,7 +218,10 @@ const EmployeeTicketsPage = () => {
         )}
       </section>
     </SidebarLayout> 
-    : 
+
+    : user.poste === "Declarant" ?
+
+
     <SidebarLayout title="Envoi de Demande" items={navItemsd}>
       <section className="glass-card p-4 sm:p-5">
         <h2 className="mb-2 text-xl font-bold">Message</h2>
@@ -282,6 +317,205 @@ const EmployeeTicketsPage = () => {
         )}
       </section>
     </SidebarLayout>
+
+    : user.poste === "Facturier" ?
+
+    <SidebarLayout title="Envoi de Demande" items={navItemsfac}>
+      <section className="glass-card p-4 sm:p-5">
+        <h2 className="mb-2 text-xl font-bold">Message</h2>
+        <p className="mb-4 text-sm text-slate-500">
+          Besoin d'aide ? Adressez une demande au Responsable concernant le traitement d'un dossier.
+        </p>
+        {error && <p className="mb-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
+
+        <form onSubmit={submitTicket} className="grid gap-3 md:grid-cols-2">
+         {/** 
+           <select className="field" name="category" value={form.category} onChange={onChange}>
+            {categoryOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+
+          <select className="field" name="priority" value={form.priority} onChange={onChange}>
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          */}
+
+          <input
+            className="field md:col-span-2"
+            name="subject"
+            placeholder="Subject"
+            value={form.subject}
+            onChange={onChange}
+            required
+          />
+
+          <textarea
+            className="field md:col-span-2"
+            name="description"
+            rows="5"
+            placeholder="Describe your issue in detail"
+            value={form.description}
+            onChange={onChange}
+            required
+          />
+
+          <button type="submit" className="btn-primary md:col-span-2 md:w-fit" disabled={submitting}>
+            {submitting ? "Envoi..." : "Envoyer"}
+          </button>
+        </form>
+      </section>
+
+      <section className="glass-card p-4 sm:p-5">
+        <h2 className="mb-3 text-xl font-bold">Mes Demandes</h2>
+        {loading ? (
+          <p className="text-slate-500">Chargement...</p>
+        ) : tickets.length === 0 ? (
+          <p className="text-slate-500">Pas de Demandes.</p>
+        ) : (
+          <div className="space-y-3">
+            {tickets.map((ticket) => (
+              <article key={ticket._id} className="rounded-xl border border-slate-200/80 bg-white/75 p-4">
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-base font-bold text-slate-800">{ticket.subject}</h3>
+                  <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                    
+                    <span className="rounded-full bg-sky-100 px-2 py-1 capitalize text-sky-700">
+                      {ticket.category.replaceAll(" ", " ")}
+                    </span>
+                    <span className="rounded-full bg-amber-100 px-2 py-1 capitalize text-amber-700">
+                      {ticket.priority}
+                    </span>
+                    <span className="rounded-full bg-slate-100 px-2 py-1 capitalize text-slate-700">
+                      {ticket.status.replaceAll(" ", " ")}
+                    </span>
+                    
+                  </div>
+                </div>
+                <p className="mb-3 text-sm text-slate-600">{ticket.description}</p>
+
+                {ticket.adminReply ? (
+                  <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm">
+                    <p className="font-semibold text-emerald-700">
+                     Reponse de {ticket.repliedByAdminName ? `(${ticket.repliedByAdminName})` : ""}
+                    </p>
+                    <p className="text-emerald-800">{ticket.adminReply}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    En attente de réponse.</p>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+    </SidebarLayout>
+
+
+  : user.poste === "Logisticien" ?
+
+    <SidebarLayout title="Envoi de Demande" items={navItems}>
+      <section className="glass-card p-4 sm:p-5">
+        <h2 className="mb-2 text-xl font-bold">Message</h2>
+        <p className="mb-4 text-sm text-slate-500">
+          Besoin d'aide ? Adressez une demande au Responsable concernant le traitement d'un dossier.
+        </p>
+        {error && <p className="mb-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
+
+        <form onSubmit={submitTicket} className="grid gap-3 md:grid-cols-2">
+         {/** 
+           <select className="field" name="category" value={form.category} onChange={onChange}>
+            {categoryOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+
+          <select className="field" name="priority" value={form.priority} onChange={onChange}>
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          */}
+
+          <input
+            className="field md:col-span-2"
+            name="subject"
+            placeholder="Subject"
+            value={form.subject}
+            onChange={onChange}
+            required
+          />
+
+          <textarea
+            className="field md:col-span-2"
+            name="description"
+            rows="5"
+            placeholder="Describe your issue in detail"
+            value={form.description}
+            onChange={onChange}
+            required
+          />
+
+          <button type="submit" className="btn-primary md:col-span-2 md:w-fit" disabled={submitting}>
+            {submitting ? "Envoi..." : "Envoyer"}
+          </button>
+        </form>
+      </section>
+
+      <section className="glass-card p-4 sm:p-5">
+        <h2 className="mb-3 text-xl font-bold">Mes Demandes</h2>
+        {loading ? (
+          <p className="text-slate-500">Chargement...</p>
+        ) : tickets.length === 0 ? (
+          <p className="text-slate-500">Pas de Demandes.</p>
+        ) : (
+          <div className="space-y-3">
+            {tickets.map((ticket) => (
+              <article key={ticket._id} className="rounded-xl border border-slate-200/80 bg-white/75 p-4">
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-base font-bold text-slate-800">{ticket.subject}</h3>
+                  <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                    
+                    <span className="rounded-full bg-sky-100 px-2 py-1 capitalize text-sky-700">
+                      {ticket.category.replaceAll(" ", " ")}
+                    </span>
+                    <span className="rounded-full bg-amber-100 px-2 py-1 capitalize text-amber-700">
+                      {ticket.priority}
+                    </span>
+                    <span className="rounded-full bg-slate-100 px-2 py-1 capitalize text-slate-700">
+                      {ticket.status.replaceAll(" ", " ")}
+                    </span>
+                    
+                  </div>
+                </div>
+                <p className="mb-3 text-sm text-slate-600">{ticket.description}</p>
+
+                {ticket.adminReply ? (
+                  <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm">
+                    <p className="font-semibold text-emerald-700">
+                     Reponse de {ticket.repliedByAdminName ? `(${ticket.repliedByAdminName})` : ""}
+                    </p>
+                    <p className="text-emerald-800">{ticket.adminReply}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    En attente de réponse.</p>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+    </SidebarLayout>
+
+    : null
      
      }
 

@@ -97,7 +97,7 @@ const EmployeeAnalyticsPage = () => {
       setLoading(true);
       setError("");
       try {
-        const { data } = await client.get("/leaves/my");
+        const { data } = await client.get("/leaves/mya");
         setLeaves(data.leaves || []);
         setTimeout(() => setChartKey((k) => k + 1), 120);
       } catch (err) {

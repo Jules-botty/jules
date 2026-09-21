@@ -3,13 +3,13 @@ import toast from "react-hot-toast";
 import SidebarLayout from "../components/SidebarLayout";
 import client from "../api/client";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { Link, useNavigate, useNavigation, useParams } from "react-router-dom";
 import LeaveHistoryPage from "./LeaveHistoryPage";
 import { Route } from "react-router-dom";
 import { Axios } from "axios";
 
 
-const Oneleave = () => {
+const Onely = () => {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -42,12 +42,45 @@ const Oneleave = () => {
 
    const onChange = (e) => setLeaves((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
+   
 
    const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setMessage("");
+
+    leaves.status = "Aprouvé";
+
+    try {
+      await client.put(
+        `/leaves/updateleave/${id}`,
+        leaves,  
+      );
+      setMessage("Enregistré");
+      toast.success("Enregistré");
+
+      setLeaves();
+      
+       navigate('/employee/history');
+     
+    } catch (err) {
+      setError(err.response?.data?.message || "Errer d'enregistrement");
+      toast.error(err.response?.data?.message || "Errer d'enregistrement");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+  const onSubmitr = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
+
+    leaves.status = "Rejeté"
 
     try {
       await client.put(
@@ -116,12 +149,12 @@ const Oneleave = () => {
 
    
 
-    {user.poste === "Secretaire" || user.poste === "Logisticien" ? 
-    <SidebarLayout title="Mise à jour" items={navItems}> 
+    {user.poste === "Secretaire" || user.poste === "Logisticien"? 
+    <SidebarLayout title="Détail" items={navItems}> 
 
   
 
-       <form onSubmit={onSubmit} className="glass-card mx-auto max-w-3xl space-y-4 p-5 sm:p-6">
+       <div className="glass-card mx-auto max-w-3xl space-y-4 p-5 sm:p-8">
         {error && <p className="rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
         {message && <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">{message}</p>}
       
@@ -130,81 +163,23 @@ const Oneleave = () => {
           Dossier: {leaves.nbDossier}
 
       </div>
-       <div className="grid gap-4 md:grid-cols-2">
+      <h1>
+       <div className="grid gap-4 md:grid-cols-1 ">
 
+       
 
-         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Numero Dossier</label>
-        <input
-          className="field"
-          name="nbDossier"
-          value={leaves.nbDossier}
-          onChange={onChange}
-          required
-
-        />
-          
-        </div>
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Type Dossier</label>
-        <select
-          className="field"
-          name="leaveType"
-          value={leaves.leaveType}
-          onChange={onChange}
-          required
-        >
-          <option value=""> </option>
-          <option value="Maritime">Maritime</option>
-          <option value="Aerien">Aérien</option>
-          <option value="Terrestre">Terrestre</option>
-          <option value="Prestation">Prestation</option>
-        </select>
-        </div>
-
-      {leaves.leaveType === "Prestation" ? null : 
-      
-      <div> 
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Type Dossier: {leaves.cetegorie} {leaves.leaveType}</label>
         
-        <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Gategorie</label>
-        <select
-          className="field"
-          name="cetegorie"
-          value={leaves.cetegorie}
-          onChange={onChange}
-          required
-        >
-          <option value=""> </option>
-          <option value="Import">Import</option>
-          <option value="Export">Export</option>
-        </select>
+         
         </div>
 
-      </div>
-
-      }
         
-   
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Client</label>
-        <select
-          className="field"
-          name="client"
-          value={leaves.client}
-          onChange={onChange}
-          required
-        >
-          <option value=""> </option>
-          <option value="CNR">CNR</option>
-          <option value="PETROFAC">PETROFAC</option>
-          <option value="PETROCI">PETROCI</option>
-          <option value="NOPCI">NOPCI</option>
-          <option value="PROMAR SHIPPING">PROMAR SHIPPING</option>
-          <option value="ATT">ATT</option>
-        </select>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Client: {leaves.client}</label>
+        
         </div>
 
         {leaves.leaveType === "Prestation" ? null : 
@@ -215,33 +190,13 @@ const Oneleave = () => {
           {leaves.leaveType === "Maritime" ? 
        <>
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Type TC</label>
-        <select
-          className="field"
-          name="typeTc"
-          value={leaves.typeTc}
-          onChange={onChange}
-        >
-          <option value=" "> </option>
-          <option value="10'">10'</option>
-          <option value="20'">20'</option>
-          <option value="30'">30'</option>
-          <option value="40'">40'</option>
-        </select>
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Type TC : {leaves.typeTc}</label>
+        
         </div>
 
           <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700"> Nombre TC</label>
-        <input
-          type="number"
-          min={1}
-          className="field"
-          name="nbTc"
-          value={leaves.nbTc}
-          onChange={onChange}
-          
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700"> Nombre TC: {leaves.nbTc}</label>
+        
           
         </div>
 
@@ -251,122 +206,60 @@ const Oneleave = () => {
 
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Fournisseur</label>
-        <input
-          className="field"
-          name="fournisseur"
-          value={leaves.fournisseur}
-          onChange={onChange}
-          required
-
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Fournisseur: {leaves.fournisseur}</label>
+        
           
         </div>
 
        {leaves.client === "CNR" ?  
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">OT n°:</label>
-        <input
-          className="field"
-          name="nbOt"
-          value={leaves.nbOt}
-          onChange={onChange}
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">OT n°: {leaves.nbOt}</label>
+        
           
         </div> : null
         }
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">LTA / BL n°:</label>
-        <input
-          className="field"
-          name="nbltabl"
-          value={leaves.nbltabl}
-          onChange={onChange}
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">LTA / BL n°: {leaves.nbltabl}</label>
+        
           
         </div>
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700"> Nombre Colis</label>
-        <input
-          type="number"
-          min={1}
-          className="field"
-          name="nbColis"
-          value={leaves.nbColis}
-          onChange={onChange}
-          required
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700"> Nombre Colis: {leaves.nbColis}</label>
+      
           
         </div>
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700"> Poids (Kg) </label>
-        <input
-          type="number"
-          min={1}
-          className="field"
-          name="poids"
-          value={leaves.poids}
-          onChange={onChange}
-          required
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700"> Poids (Kg): {leaves.poids}</label>
+        
           
         </div>
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Facture Commerciale n°:</label>
-        <input
-          className="field"
-          name="factcom"
-          value={leaves.factcom}
-          onChange={onChange}
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Facture Commerciale n°: {leaves.factcom}</label>
+        
           
         </div>
 
         {leaves.cetegorie === "Import" ? 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">ETA</label>
-        <input
-          type="date"
-          className="field"
-          name="eta"
-          value={leaves.eta}
-          onChange={onChange}
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">ETA: {leaves.eta}</label>
+        
           
         </div> : 
         <>
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Bon de Sortie</label>
-        <input
-          className="field"
-          name="bondesortie"
-          value={leaves.bondesortie}
-          onChange={onChange}
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Bon de Sortie: {leaves.bondesortie}</label>
+        
           
         </div>
 
         <div>
-        <label className="mb-1 block text-sm font-semibold text-slate-700">Ivoice Export</label>
-        <input
-          className="field"
-          name="exportinvoice"
-          value={leaves.exportinvoice}
-          onChange={onChange}
-          
-        />
+        <label className="mb-1 block text-sm font-semibold text-slate-700">Ivoice Export: {leaves.exportinvoice}</label>
+        
           
         </div>
 
@@ -379,42 +272,93 @@ const Oneleave = () => {
           </>
 
           }
-
+        
           </div>
 
      {leaves.leaveType === "Prestation" ? null : 
 
         
 <>
-        <label className="block text-sm font-semibold text-slate-700">Designation</label>
-        <textarea
-          className="field"
-          rows="2"
-          name="desigation"
-          value={leaves.desigation}
-          onChange={onChange}
-          required
-          
-        />
+        <label className="block text-sm font-semibold text-slate-700">Designation: {leaves.desigation}</label>
+        
   </>
 
          }
 
 
 
-        <label className="block text-sm font-semibold text-slate-700">Observation</label>
-        <textarea
+        <label className="block text-sm font-semibold text-slate-700">Observation: {leaves.reason}</label>
+       </h1>
+       {
+         user.poste === "Secretaire"?
+<div>
+         <Link
+          className=" btn-primary w-full sm:w-auto "
+          to={"/onleave/"+leaves._id}
+                                
+          type="button"
+           >
+          Actualiser 
+                                   
+         </Link>
+
+
+  </div>
+
+        : user.poste === "Logisticien" ?
+     <div className="glass-card mx-auto max-w-3xl space-y-4 p-5 sm:p-2  grid gap-4 md:grid-cols-2">
+      <div>
+        <form onSubmit={onSubmit} >
+
+         <input
           className="field"
-          rows="2"
-          name="reason"
-          value={leaves.reason}
+          type="hidden"
+          name="status"
+          value={leaves.status}
           onChange={onChange}
-          
-        />
-        <button type="submit" disabled={loading} className="btn-primary w-full sm:w-auto">
-          {loading ? "Chargement..." : "Mettre à jour"}
+          required
+
+        />     
+
+        <button  disabled={loading} className="btn-primary ">
+          {loading ? "Chargement..." : "Aprouver"}
         </button>
-      </form>
+
+
+        </form>
+      </div>
+       
+      <div>
+
+        <form onSubmit={onSubmitr} >
+
+         <input
+          className="field"
+          type="hidden"
+          name="status"
+          value={leaves.status}
+          onChange={onChange}
+          required
+
+        />  
+
+         <button   disabled={loading} className="btn-primary  ">
+          {loading ? "Chargement..." : "Rejeter"}
+        </button>
+
+        </form>
+
+      </div>
+
+     </div>
+
+        : 
+        null
+
+
+       }
+        
+      </div>
     
    
       
@@ -899,4 +843,4 @@ const Oneleave = () => {
   );
 };
 
-export default Oneleave;
+export default Onely;

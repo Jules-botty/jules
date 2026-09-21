@@ -38,6 +38,9 @@ const leaveSchema = new mongoose.Schema(
     bondesortie: { type: String, default: "" },
     exportinvoice: { type: String, default: "" },
 
+    eta:{ type: String, default: "" },
+    
+
     statutfac: { type: String, default: "" },
     montantfac: { type: String, default: "" },
     deb_douanes: { type: String, default: "" },
@@ -74,7 +77,7 @@ const leaveSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "",
+      default: "En attente",
       trim: true
     },
     reviewedById: { type: mongoose.Schema.Types.ObjectId, default: null },
